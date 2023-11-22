@@ -26,6 +26,6 @@
 
 ## Отчет Allure
 
-![img_1.png](img_1.png)
+![image](https://github.com/Polina1119/Diplom_2/assets/144913796/d7208e67-11be-4e5b-b3ee-51b31e91a6ee)
 
-![img_2.png](img_2.png)
+![image](https://github.com/Polina1119/Diplom_2/assets/144913796/86981beb-af07-43d5-bb70-5ab916af620c)
