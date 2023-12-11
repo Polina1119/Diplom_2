@@ -1,19 +1,15 @@
 import requests
 from conftest import url
-from data import *
+import data
 import allure
+
+payload = data.User.payload
 
 
 class TestRegisterUser:
 
     @allure.title('Проверка создания уникального пользователя')
     def test_create_user(self, prepare_user):
-        with allure.step('Генерация данных курьера'):
-            payload = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
         with allure.step('Отправка POST запроса'):
             response = requests.post(f'{url}auth/register', data=payload)
         prepare_user(payload)
@@ -26,12 +22,6 @@ class TestRegisterUser:
 
     @allure.title('Проверка создания существующего пользователя')
     def test_create_existing_user(self, prepare_user):
-        with allure.step('Генерация данных курьера'):
-            payload = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
         with allure.step('Отправка двух POST запросов, используя сгенерированные данные'):
             response = requests.post(f'{url}auth/register', data=payload)
             response2 = requests.post(f'{url}auth/register', data=payload)
@@ -46,18 +36,9 @@ class TestRegisterUser:
     @allure.title('Проверка создания пользователя без обязательного поля')
     def test_create_user_without_field(self):
         with allure.step('Генерация данных'):
-            payload_without_name = {
-                "email": email,
-                "password": password
-            }
-            payload_without_password = {
-                "email": email,
-                "name": name
-            }
-            payload_without_email = {
-                "password": password,
-                "name": name
-            }
+            payload_without_name = data.User.payload_without_name
+            payload_without_password = data.User.payload_without_password
+            payload_without_email = data.User.payload_without_email
         with allure.step('Отправка POST запросов, используя сгенерированные данные'):
             response = requests.post(f'{url}auth/register', data=payload_without_name)
             response2 = requests.post(f'{url}auth/register', data=payload_without_password)

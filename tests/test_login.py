@@ -1,20 +1,17 @@
 import requests
-from conftest import url
-from data import *
+import api
+import data
 import allure
+
+url = data.Urls.url
+payload = data.User.payload
 
 
 class TestLoginUser:
 
     @allure.title('Проверка логина пользователя с валидными данными')
     def test_login_user(self, prepare_user):
-        with allure.step('Генерация данных и регистрация пользователя'):
-            payload = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
-            requests.post(f'{url}auth/register', data=payload)
+        api.register_user()
         with allure.step('Отправка POST запроса, используя сгенерированные данные'):
             response = requests.post(f'{url}auth/login', data=payload)
         prepare_user(payload)
@@ -26,12 +23,6 @@ class TestLoginUser:
 
     @allure.title('Проверка логина несуществующего пользователя')
     def test_login_non_existent_courier(self):
-        with allure.step('Генерация данных курьера'):
-            payload = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
         with allure.step('Отправка POST запроса, используя сгенерированные данные'):
             response = requests.post(f'{url}auth/login', data=payload)
 

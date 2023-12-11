@@ -1,7 +1,10 @@
 import requests
-from conftest import url
-from data import *
+import data
 import allure
+import api
+
+url = data.Urls.url
+payload_user = data.User.payload
 
 
 class TestOrders:
@@ -24,13 +27,7 @@ class TestOrders:
 
     @allure.title('Проверка создания заказа с авторизацией')
     def test_orders_with_authorization(self, prepare_user):
-        with allure.step('Генерация данных и регистрация пользователя'):
-            payload_user = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
-            response_register = requests.post(f'{url}auth/register', data=payload_user)
+        response_register = api.register_user()
         token = response_register.json()['accessToken']
         payload = {
             "ingredients":
@@ -63,13 +60,7 @@ class TestOrders:
 
     @allure.title('Проверка создания заказа с некорректным хешем ингредиентов')
     def test_orders_with_incorrect_hash(self, prepare_user):
-        with allure.step('Генерация данных и регистрация пользователя'):
-            payload_user = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
-            response_register = requests.post(f'{url}auth/register', data=payload_user)
+        response_register = api.register_user()
         token = response_register.json()['accessToken']
         payload = {
             "ingredients":
@@ -96,13 +87,7 @@ class TestOrders:
 
     @allure.title('Проверка получения заказов с авторизацией')
     def test_orders_with_authorization(self, prepare_user):
-        with allure.step('Генерация данных и регистрация пользователя'):
-            payload_user = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
-            response_register = requests.post(f'{url}auth/register', data=payload_user)
+        response_register = api.register_user()
         token = response_register.json()['accessToken']
         with allure.step('Отправка GET запроса'):
             response = requests.get(f'{url}orders', headers={"Authorization": token})

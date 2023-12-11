@@ -1,30 +1,23 @@
 import requests
-from conftest import url
-from data import *
+import api
+import data
 import allure
+
+
+payload = data.User.payload
+url = data.Urls.url
 
 
 class TestUser:
 
     @allure.title('Проверка изменения данных пользователя c авторизацией')
     def test_patch_user_with_authorization(self, prepare_user):
-        with allure.step('Генерация данных и регистрация пользователя'):
-            payload = {
-                "email": email,
-                "password": password,
-                "name": name
-            }
-            response_register = requests.post(f'{url}auth/register', data=payload)
+        response_register = api.register_user()
         token = response_register.json()['accessToken']
         with allure.step('Отправка PATCH запроса, используя заголовки'):
-            with allure.step('Генерация данных для изменения'):
-                payload_mod = {
-                    "email": email,
-                    "password": password,
-                    "name": name
-                }
+            payload_mod = data.User.payload_mod
             response = requests.patch(f'{url}auth/user', data=payload_mod, headers={"Authorization": token})
-        prepare_user(payload)
+        prepare_user(payload_mod)
 
         with allure.step("Проверка, что успешный запрос возвращает true"):
             assert response.json()['success'] == True
@@ -33,13 +26,8 @@ class TestUser:
 
     @allure.title('Проверка изменения данных пользователя без авторизации')
     def test_patch_user_without_authorization(self):
+        api.register_user()
         with allure.step('Отправка PATCH запроса'):
-            with allure.step('Генерация данных и регистрация пользователя'):
-                payload = {
-                    "email": email,
-                    "password": password,
-                    "name": name
-                }
             response = requests.patch(f'{url}auth/user', data=payload)
 
         with allure.step("Проверка сообщения об ошибке"):

@@ -1,7 +1,8 @@
 import pytest
 import requests
+import data
 
-url = 'https://stellarburgers.nomoreparties.site/api/'
+url = data.Urls.url
 token = None
 
 
